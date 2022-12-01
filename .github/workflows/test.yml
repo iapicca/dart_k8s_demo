@@ -1,0 +1,37 @@
+name: 'test'
+on:
+  pull_request:
+    branches:
+      - master
+jobs:
+  test:
+    name: 'run test and analyze'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'checkout'
+        uses: actions/checkout@v3
+      - name: 'setup java'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt-openj9'
+          java-version: '9'
+      - name: 'setup flutter'
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - name: 'update PATH'
+        run: |
+          echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH && \
+          echo "PUB_CACHE="$HOME/.pub-cache"" >> $GITHUB_ENV         
+      - name: 'activate melos' 
+        run: |
+          dart pub global activate melos
+      - name: 'activate coverage' 
+        run: |
+          dart pub global activate coverage
+      - name: 'install dependencies'
+        run: |
+          melos bootstrap
+      - name: 'run tests'
+        run: |
+          melos run test
