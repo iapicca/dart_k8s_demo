@@ -2,12 +2,11 @@ FROM docker.io/library/dart:stable AS build
 
 COPY . /app
 WORKDIR /app
-RUN mkdir build
-RUN dart compile exe ./bin/server.dart -o ./build/server
+RUN dart compile exe ./bin/server.dart -o ./server
 
 FROM scratch
 COPY --from=build /runtime/ /
-COPY --from=build /app/build /bin
+COPY --from=build /app/ /bin
 
 EXPOSE 8080
 CMD ["server"]
