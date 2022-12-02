@@ -1,4 +1,4 @@
-FROM dart:stable AS build
+FROM docker.io/library/dart:stable AS build
 
 COPY . /app
 WORKDIR /app
