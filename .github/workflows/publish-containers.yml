@@ -23,6 +23,15 @@ jobs:
       #     sudo apt-get -y update && \
       #     sudo apt-get -y install podman
 
+      # https://github.com/redhat-actions/podman-login
+      # https://github.com/redhat-actions/buildah-build#using-private-images
+      - name: login to ghcr
+        uses: redhat-actions/podman-login@v1
+        with:
+          username: ${{ env.REGISTRY_USER }}
+          password: ${{ env.REGISTRY_PASSWORD }}
+          registry: ${{ env.IMAGE_REGISTRY }}
+
       - name: build image
         id: build_image
         uses: redhat-actions/buildah-build@v2
@@ -31,15 +40,7 @@ jobs:
           tags: latest ${{ env.IMAGE_TAGS }}
           containerfiles: |
             server/Containerfile
-
-      # # https://github.com/redhat-actions/podman-login
-      # - name: login to ghcr
-      #   uses: redhat-actions/podman-login@v1
-      #   with:
-      #     username: ${{ env.REGISTRY_USER }}
-      #     password: ${{ env.REGISTRY_PASSWORD }}
-      #     registry: ${{ env.IMAGE_REGISTRY }}
-
+            
       - name: push to ghcr
         uses: redhat-actions/push-to-registry@v2
         id: push
