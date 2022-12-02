@@ -18,11 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # - name: install podman
-      #   run: |
-      #     sudo apt-get -y update && \
-      #     sudo apt-get -y install podman
-
       # https://github.com/redhat-actions/podman-login
       # https://github.com/redhat-actions/buildah-build#using-private-images
       - name: login to ghcr
@@ -40,7 +35,7 @@ jobs:
           tags: latest ${{ env.IMAGE_TAGS }}
           containerfiles: |
             server/Containerfile
-            
+
       - name: push to ghcr
         uses: redhat-actions/push-to-registry@v2
         id: push
