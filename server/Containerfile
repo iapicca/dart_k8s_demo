@@ -1,15 +1,13 @@
 FROM dart:stable AS build
 
+COPY . /app
 WORKDIR /app
-COPY pubspec.* ./
-RUN dart pub get
-
-COPY . .
-RUN dart compile exe bin/server.dart -o server
+RUN mkdir build
+RUN dart compile exe ./bin/server.dart -o ./build/server
 
 FROM scratch
 COPY --from=build /runtime/ /
-COPY --from=build /app/server /app/server
+COPY --from=build /app/build /bin
 
 EXPOSE 8080
-CMD ["/app/server"]
+CMD ["server"]
